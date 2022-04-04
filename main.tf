@@ -5,11 +5,11 @@ terraform {
       version = "0.5.4"
     }
   }
-  backend "remote" {
+  cloud {
     organization = "Bricks-Corp"
 
     workspaces {
-      name = "databricks-dev-workspace"
+      name = "mlops-on-databricks-mlflow"
     }
   }
 }
@@ -18,8 +18,8 @@ terraform {
 
 provider "databricks" {
   # Configuration options
-  host  = var.DATABRICKS_HOST
-  token = var.DATABRICKS_TOKEN
+  # host  = var.DATABRICKS_HOST
+  # token = var.DATABRICKS_TOKEN
 }
 #variable "DATABRICKS_WORKSPACE_URL" {
 #  type        = string
