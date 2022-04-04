@@ -18,9 +18,11 @@ provider "databricks" {
 }
 
 data "databricks_current_user" "me" {}
-data "databricks_spark_version" "latest" {}
 data "databricks_node_type" "smallest" {
   local_disk = true
+}
+data "databricks_spark_version" "latest_lts" {
+  long_term_support = true
 }
 
 resource "databricks_notebook" "this" {
@@ -36,9 +38,14 @@ resource "databricks_notebook" "this" {
 resource "databricks_job" "this" {
   name = "Terraform Demo 2.0 (${data.databricks_current_user.me.alphanumeric})"
   new_cluster {
-    num_workers   = 1
-    spark_version = data.databricks_spark_version.latest.id
-    node_type_id  = data.databricks_node_type.smallest.id
+    num_workers             = 1
+    spark_version           = data.databricks_spark_version.latest_lts.id
+    node_type_id            = data.databricks_node_type.smallest.id
+    autotermination_minutes = 10
+    spark_conf = {
+      "spark.databricks.cluster.profile" : "singleNode",
+      "spark.master" : "local[*, 4]"
+    }
   }
   notebook_task {
     notebook_path = databricks_notebook.this.path
