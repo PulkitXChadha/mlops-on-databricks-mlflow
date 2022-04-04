@@ -2,7 +2,7 @@ terraform {
   required_providers {
     databricks = {
       source  = "databrickslabs/databricks"
-      version = "0.3.7"
+      version = "0.5.4"
     }
   }
   backend "remote" {
@@ -13,6 +13,8 @@ terraform {
     }
   }
 }
+
+
 
 provider "databricks" {
   # Configuration options
