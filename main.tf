@@ -18,8 +18,8 @@ terraform {
 
 provider "databricks" {
   # Configuration options
-  #host  = var.DATABRICKS_WORKSPACE_URL
-  #token = var.DATABRICKS_TOKEN
+  host  = var.DATABRICKS_HOST
+  token = var.DATABRICKS_TOKEN
 }
 #variable "DATABRICKS_WORKSPACE_URL" {
 #  type        = string
