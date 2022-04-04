@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 setup(
-    name="mlops_on_databricks_mlflow",
+    name="helpers",
     version="0.0.1",
     author="Pulkit Chadha",
     author_email="",
@@ -16,7 +16,7 @@ setup(
     packages=find_packages(exclude=('tests*', 'testing*', 'docs')),
     entry_points={
         'console_scripts': [
-            'post_comment_cli=mlops_on_databricks_mlflow.mlflowAPIWrapper:postComment',
+            'post_comment_cli=helpers.mlflowAPIWrapper:postComment',
         ],
     }
 )

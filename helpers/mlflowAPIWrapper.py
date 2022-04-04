@@ -18,10 +18,5 @@ def mlflow_call_endpoint(endpoint, method, body='{}'):
 
 
 def postComment(json_obj):
-    print("Posting comment to MLflow Model")
     mlflow_call_endpoint('comments/create', 'POST', body=json.dumps(json_obj))
-
-
-# if __name__ == '__main__':
-#     print('This is a helper file for setup.py')
-#     exit(main())
+    print(f'Comment Posted')
