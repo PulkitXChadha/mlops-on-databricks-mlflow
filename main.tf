@@ -9,7 +9,7 @@ terraform {
     organization = "Bricks-Corp"
 
     workspaces {
-      name = "mlops-on-databricks-mlflow"
+      name = ["mlops-on-databricks-mlflow-AWS","mlops-on-databricks-mlflow-GCP"]
     }
   }
 }
