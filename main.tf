@@ -5,13 +5,13 @@ terraform {
       version = "0.5.4"
     }
   }
-  cloud {
-    organization = "Bricks-Corp"
+  #   cloud {
+  #     organization = "Bricks-Corp"
 
-    workspaces {
-      name = ["mlops-on-databricks-mlflow-AWS","mlops-on-databricks-mlflow-GCP"]
-    }
-  }
+  #     workspaces {
+  #       name = "mlops-on-databricks-mlflow-AWS"
+  #     }
+  #   }
 }
 
 provider "databricks" {
