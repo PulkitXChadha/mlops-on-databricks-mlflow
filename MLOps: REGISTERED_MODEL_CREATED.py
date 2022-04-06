@@ -1,4 +1,10 @@
 # Databricks notebook source
+all_args = dbutils.notebook.entry_point.getCurrentBindings()
+if all_args:
+  job_id = all_args['job_id']
+
+# COMMAND ----------
+
 import mlflow
 import json
 from mlflow.utils.rest_utils import http_request
@@ -10,7 +16,7 @@ client = MlflowClient()
 host_creds = client._tracking_client.store.get_host_creds()
 
 access_token = host_creds.token
-job_id = 823266666620137
+
 
 job_spec = JobSpec(job_id=job_id, access_token=access_token)
 job_webhook = RegistryWebhooksClient().create_webhook(

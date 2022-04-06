@@ -13,5 +13,5 @@ access_token = host_creds.token
 def add_job_webhook(job_id,event,model_name):
   job_spec = JobSpec(job_id=job_id, access_token=access_token)
   job_webhook = RegistryWebhooksClient().create_webhook(events=[event], job_spec=job_spec, model_name=model_name)
-  client.set_registered_model_tag(name=model_name , key="Webhook-"+event[0], value=job_webhook.id)
+  client.set_registered_model_tag(name=model_name , key="Webhook-"+event, value=job_webhook.id)
   return job_webhook.id

@@ -28,10 +28,18 @@ if all_args:
 else:
   event_message = json.loads(sample_event_message)
 
-print (event_message)
+context_str = dbutils.notebook.entry_point.getDbutils().notebook().getContext().toJson()
+context = json.loads(context_str)
+run_id_obj = context.get('currentRunId', {})
+run_id = run_id_obj.get('id', None) if run_id_obj else None
+job_id = context.get('tags', {}).get('jobId', None)
+
+
 model_name = event_message['model_name']
 event_text = event_message['text']
 model_version = event_message['version']
+event = event_message['event']
+webhook_id = event_message['webhook_id']
 
 # COMMAND ----------
 
@@ -40,19 +48,15 @@ model_version = event_message['version']
 
 # COMMAND ----------
 
-import mlflow
-from mlflowAPIWrapper import postComment
-from mlflow.tracking import MlflowClient
-client = MlflowClient()
-
-# COMMAND ----------
+from helpers.mlflowAPIWrapper import postComment
 
 postComment({
-  "comment": "This version is great!",
-  "name": "pulkits_demo",
-  "version": "1"
+  "comment": f"""[Webhook-{event}]
+  JOB RUN ID: job/{job_id}/run/{run_id}
+  Before you request a transition to staging please make sure to:
+    - Enter an appropriate Description
+    - Have an input and output signature for the model
+  """,
+  "name": model_name,
+  "version": model_version
 })
-
-# COMMAND ----------
-
-

@@ -20,3 +20,12 @@ def mlflow_call_endpoint(endpoint, method, body='{}'):
 def postComment(json_obj):
     mlflow_call_endpoint('comments/create', 'POST', body=json.dumps(json_obj))
     print(f'Comment Posted')
+
+def addTagToVersion(model_name,version,key, value):
+    client.set_model_version_tag(name=model_name, version=version, key=key, value=value)
+    print(f'tag {key} added to version {version}')
+    
+def addTagToModel(model_name, key, value):
+    client.set_registered_model_tag(name=model_name , key=key, value=value)
+    print(f'tag {key} added to model')
+  
