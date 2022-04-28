@@ -8,3 +8,8 @@ variable "DATABRICKS_TOKEN" {
   type        = string
   sensitive   = true
 }
+
+variable "DATABRICKS_REPO_HOME" {
+  description = "Parent folder were repo will be added"
+  type        = string
+}
