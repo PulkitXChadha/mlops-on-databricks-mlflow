@@ -5,14 +5,17 @@ terraform {
       version = "0.5.4"
     }
   }
-  #   cloud {
-  #     organization = "Bricks-Corp"
 
-  #     workspaces {
-  #       name = "mlops-on-databricks-mlflow-AWS"
-  #     }
-  #   }
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "Bricks-Corp"
+    workspaces {
+      prefix = "mlops-on-databricks-mlflow-"
+    }
+  }
+
 }
+
 
 provider "databricks" {
 }
@@ -28,122 +31,21 @@ data "databricks_spark_version" "latest_lts" {
 
 resource "databricks_repo" "mlops-on-databricks-mlflow" {
   url  = "https://github.com/PulkitXChadha/mlops-on-databricks-mlflow.git"
-  path = "${data.databricks_current_user.me.repos}/mlops-on-databricks-mlflow"
+  path = "${var.DATABRICKS_REPO_HOME}/Global/mlops-on-databricks-mlflow"
 }
 
-resource "databricks_job" "model_verison_transitioned_to_prod" {
-  name = "MLOps: MODEL_VERSION_TRANSITIONED_TO_PRODUCTION"
-  new_cluster {
-    num_workers   = 0
-    spark_version = data.databricks_spark_version.latest_lts.id
-    node_type_id  = data.databricks_node_type.smallest.id
-    spark_conf = {
-      "spark.databricks.cluster.profile" = "singleNode"
-      "spark.master"                     = "local[*, 4]"
-    }
-    custom_tags = {
-      ResourceClass = "SingleNode"
-    }
+resource "databricks_cluster" "MLOps" {
+  cluster_name            = "MLOps"
+  num_workers             = 0
+  autotermination_minutes = 0
+  spark_version           = data.databricks_spark_version.latest_lts.id
+  node_type_id            = data.databricks_node_type.smallest.id
+  spark_conf = {
+    "spark.databricks.cluster.profile" = "singleNode"
+    "spark.master"                     = "local[*, 4]"
   }
-  notebook_task {
-    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: MODEL_VERSION_TRANSITIONED_TO_PRODUCTION"
-  }
-  email_notifications {}
-}
-
-resource "databricks_job" "model_verison_transitioned_to_staging" {
-  name = "MLOps: MODEL_VERSION_TRANSITIONED_TO_STAGING"
-  new_cluster {
-    num_workers   = 0
-    spark_version = data.databricks_spark_version.latest_lts.id
-    node_type_id  = data.databricks_node_type.smallest.id
-    spark_conf = {
-      "spark.databricks.cluster.profile" = "singleNode"
-      "spark.master"                     = "local[*, 4]"
-    }
-    custom_tags = {
-      ResourceClass = "SingleNode"
-    }
-  }
-  notebook_task {
-    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: MODEL_VERSION_TRANSITIONED_TO_STAGING"
-  }
-  email_notifications {}
-}
-
-resource "databricks_job" "transition_requested_to_prod" {
-  name = "MLOps: TRANSITION_REQUEST_TO_PRODUCTION_CREATED"
-  new_cluster {
-    num_workers   = 0
-    spark_version = data.databricks_spark_version.latest_lts.id
-    node_type_id  = data.databricks_node_type.smallest.id
-    spark_conf = {
-      "spark.databricks.cluster.profile" = "singleNode"
-      "spark.master"                     = "local[*, 4]"
-    }
-    custom_tags = {
-      ResourceClass = "SingleNode"
-    }
-  }
-  notebook_task {
-    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: TRANSITION_REQUEST_TO_PRODUCTION_CREATED"
-  }
-  email_notifications {}
-}
-
-resource "databricks_job" "transition_requested_to_staging" {
-  name = "MLOps: TRANSITION_REQUEST_TO_STAGING_CREATED"
-  new_cluster {
-    num_workers   = 0
-    spark_version = data.databricks_spark_version.latest_lts.id
-    node_type_id  = data.databricks_node_type.smallest.id
-    spark_conf = {
-      "spark.databricks.cluster.profile" = "singleNode"
-      "spark.master"                     = "local[*, 4]"
-    }
-    custom_tags = {
-      ResourceClass = "SingleNode"
-    }
-  }
-  notebook_task {
-    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: TRANSITION_REQUEST_TO_STAGING_CREATED"
-  }
-  email_notifications {}
-}
-
-resource "databricks_job" "model_verison_created" {
-  name = "MLOps: MODEL_VERSION_CREATED"
-  new_cluster {
-    num_workers   = 0
-    spark_version = data.databricks_spark_version.latest_lts.id
-    node_type_id  = data.databricks_node_type.smallest.id
-    spark_conf = {
-      "spark.databricks.cluster.profile" = "singleNode"
-      "spark.master"                     = "local[*, 4]"
-    }
-    custom_tags = {
-      ResourceClass = "SingleNode"
-    }
-  }
-  notebook_task {
-    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: MODEL_VERSION_CREATED"
-  }
-  email_notifications {}
-}
-
-resource "databricks_job" "deploy_webhooks" {
-  name = "MLOps: Deploy Webhooks to New Model"
-  new_cluster {
-    num_workers   = 0
-    spark_version = data.databricks_spark_version.latest_lts.id
-    node_type_id  = data.databricks_node_type.smallest.id
-    spark_conf = {
-      "spark.databricks.cluster.profile" = "singleNode"
-      "spark.master"                     = "local[*, 4]"
-    }
-    custom_tags = {
-      ResourceClass = "SingleNode"
-    }
+  custom_tags = {
+    ResourceClass = "SingleNode"
   }
   library {
     pypi {
@@ -151,6 +53,56 @@ resource "databricks_job" "deploy_webhooks" {
       // repo can also be specified here
     }
   }
+}
+
+resource "databricks_job" "model_verison_transitioned_to_prod" {
+  name                = "MLOps: MODEL_VERSION_TRANSITIONED_TO_PRODUCTION"
+  existing_cluster_id = databricks_cluster.MLOps.id
+  notebook_task {
+    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: MODEL_VERSION_TRANSITIONED_TO_PRODUCTION"
+  }
+  email_notifications {}
+}
+
+resource "databricks_job" "model_verison_transitioned_to_staging" {
+  name                = "MLOps: MODEL_VERSION_TRANSITIONED_TO_STAGING"
+  existing_cluster_id = databricks_cluster.MLOps.id
+  notebook_task {
+    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: MODEL_VERSION_TRANSITIONED_TO_STAGING"
+  }
+  email_notifications {}
+}
+
+resource "databricks_job" "transition_requested_to_prod" {
+  name                = "MLOps: TRANSITION_REQUEST_TO_PRODUCTION_CREATED"
+  existing_cluster_id = databricks_cluster.MLOps.id
+  notebook_task {
+    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: TRANSITION_REQUEST_TO_PRODUCTION_CREATED"
+  }
+  email_notifications {}
+}
+
+resource "databricks_job" "transition_requested_to_staging" {
+  name                = "MLOps: TRANSITION_REQUEST_TO_STAGING_CREATED"
+  existing_cluster_id = databricks_cluster.MLOps.id
+  notebook_task {
+    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: TRANSITION_REQUEST_TO_STAGING_CREATED"
+  }
+  email_notifications {}
+}
+
+resource "databricks_job" "model_verison_created" {
+  name                = "MLOps: MODEL_VERSION_CREATED"
+  existing_cluster_id = databricks_cluster.MLOps.id
+  notebook_task {
+    notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: MODEL_VERSION_CREATED"
+  }
+  email_notifications {}
+}
+
+resource "databricks_job" "deploy_webhooks" {
+  name                = "MLOps: Deploy Webhooks to New Model"
+  existing_cluster_id = databricks_cluster.MLOps.id
   notebook_task {
     notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: Deploy Webhooks"
     base_parameters = {
@@ -164,26 +116,20 @@ resource "databricks_job" "deploy_webhooks" {
   email_notifications {}
 }
 
+# resource "databricks_mlflow_webhook" "job" {
+#   events      = ["REGISTERED_MODEL_CREATED"]
+#   description = "Databricks MLFlow registry webhook"
+#   status      = "ACTIVE"
+#   job_spec {
+#     job_id        = databricks_job.deploy_webhooks.id
+#     workspace_url = var.DATABRICKS_HOST
+#     access_token  = var.DATABRICKS_TOKEN
+#   }
+# }
+
 resource "databricks_job" "registered_model_creation" {
-  name = "MLOps: REGISTERED_MODEL_CREATED"
-  new_cluster {
-    num_workers   = 0
-    spark_version = data.databricks_spark_version.latest_lts.id
-    node_type_id  = data.databricks_node_type.smallest.id
-    spark_conf = {
-      "spark.databricks.cluster.profile" = "singleNode"
-      "spark.master"                     = "local[*, 4]"
-    }
-    custom_tags = {
-      ResourceClass = "SingleNode"
-    }
-  }
-  library {
-    pypi {
-      package = "databricks_registry_webhooks==0.1.1"
-      // repo can also be specified here
-    }
-  }
+  name                = "MLOps: REGISTERED_MODEL_CREATED"
+  existing_cluster_id = databricks_cluster.MLOps.id
   notebook_task {
     notebook_path = "${databricks_repo.mlops-on-databricks-mlflow.path}/MLOps: REGISTERED_MODEL_CREATED"
     base_parameters = {
