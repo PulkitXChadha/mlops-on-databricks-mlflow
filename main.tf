@@ -31,7 +31,7 @@ data "databricks_spark_version" "latest_lts" {
 
 resource "databricks_repo" "mlops-on-databricks-mlflow" {
   url  = "https://github.com/PulkitXChadha/mlops-on-databricks-mlflow.git"
-  path = "${var.DATABRICKS_REPO_HOME}/Global/mlops-on-databricks-mlflow"
+  path = "${var.DATABRICKS_REPO_HOME}/mlops-on-databricks-mlflow"
 }
 
 resource "databricks_cluster" "MLOps" {
