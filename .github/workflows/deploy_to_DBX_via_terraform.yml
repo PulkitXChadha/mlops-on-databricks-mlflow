@@ -24,13 +24,14 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
-      - name: Terraform Select Workspace
-        id: wrkspc
-        run: terraform workspace select AWS
 
       - name: Terraform Init
         id: init
         run: terraform init
+        
+      - name: Terraform Select Workspace
+        id: wrkspc
+        run: terraform workspace select AWS
       
       - name: Terraform Validate
         id: validate
@@ -90,13 +91,14 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
       - name: Terraform Select Workspace
         id: wrkspc
         run: terraform workspace select GCP
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
       
       - name: Terraform Validate
         id: validate
@@ -157,13 +159,14 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
       - name: Terraform Select Workspace
         id: wrkspc
         run: terraform workspace select Azure
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
       
       - name: Terraform Validate
         id: validate
