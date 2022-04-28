@@ -10,6 +10,8 @@ jobs:
   Deploy-on-AWS:
     name: "Terraform Deploy on AWS"
     runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: AWS
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,8 +21,6 @@ jobs:
         with:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-        env:
-          TF_WORKSPACE: AWS
 
       - name: Terraform Format
         id: fmt
@@ -74,6 +74,8 @@ jobs:
   Deploy-on-GCP:
     name: "Terraform Deploy on GCP"
     runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: GCP
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -83,8 +85,6 @@ jobs:
         with:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-        env:
-          TF_WORKSPACE: AWS
 
       - name: Terraform Format
         id: fmt
@@ -139,6 +139,8 @@ jobs:
   Deploy-on-Azure:
     name: "Terraform Deploy on Azure"
     runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: Azure
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -148,8 +150,6 @@ jobs:
         with:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-        env:
-          TF_WORKSPACE: AWS
 
       - name: Terraform Format
         id: fmt
