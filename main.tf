@@ -37,13 +37,10 @@ resource "databricks_repo" "mlops-on-databricks-mlflow" {
 resource "databricks_cluster" "MLOps" {
   cluster_name            = "MLOps"
   num_workers             = 0
-<<<<<<< HEAD
   autotermination_minutes = 0
-=======
-  autotermination_minutes = 0
->>>>>>> d023d9980608c3ef18727c4b952ae8804ad4e0d4
-  spark_version           = data.databricks_spark_version.latest_lts.id
-  node_type_id            = data.databricks_node_type.smallest.id
+
+  spark_version = data.databricks_spark_version.latest_lts.id
+  node_type_id  = data.databricks_node_type.smallest.id
   spark_conf = {
     "spark.databricks.cluster.profile" = "singleNode"
     "spark.master"                     = "local[*, 4]"
