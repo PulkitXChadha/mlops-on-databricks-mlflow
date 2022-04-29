@@ -13,3 +13,13 @@ variable "DATABRICKS_REPO_HOME" {
   description = "Parent folder were repo will be added"
   type        = string
 }
+
+variable "SINGLE_NODE_CLUST_POLICY_ID" {
+  description = "Parent folder were repo will be added"
+  type        = string
+}
+
+# variable "TF_WORKSPACE" {
+#   description = "TF_WORKSPACE"
+#   type        = string
+# }

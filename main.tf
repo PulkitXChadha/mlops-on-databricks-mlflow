@@ -38,6 +38,7 @@ resource "databricks_cluster" "MLOps" {
   cluster_name            = "MLOps"
   num_workers             = 0
   autotermination_minutes = 0
+  policy_id               =  var.SINGLE_NODE_CLUST_POLICY_ID
 
   spark_version = data.databricks_spark_version.latest_lts.id
   node_type_id  = data.databricks_node_type.smallest.id
