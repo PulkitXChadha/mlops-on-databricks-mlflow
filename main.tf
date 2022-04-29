@@ -118,16 +118,16 @@ resource "databricks_job" "deploy_webhooks" {
   email_notifications {}
 }
 
-# resource "databricks_mlflow_webhook" "job" {
-#   events      = ["REGISTERED_MODEL_CREATED"]
-#   description = "Databricks MLFlow registry webhook"
-#   status      = "ACTIVE"
-#   job_spec {
-#     job_id        = databricks_job.deploy_webhooks.id
-#     workspace_url = var.DATABRICKS_HOST
-#     access_token  = var.DATABRICKS_TOKEN
-#   }
-# }
+resource "databricks_mlflow_webhook" "job" {
+  events      = ["REGISTERED_MODEL_CREATED"]
+  description = "Databricks MLFlow registry webhook"
+  status      = "ACTIVE"
+  job_spec {
+    job_id        = databricks_job.deploy_webhooks.id
+    workspace_url = var.DATABRICKS_HOST
+    access_token  = var.DATABRICKS_TOKEN
+  }
+}
 
 resource "databricks_job" "registered_model_creation" {
   name                = "MLOps: REGISTERED_MODEL_CREATED"
