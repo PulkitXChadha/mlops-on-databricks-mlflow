@@ -12,11 +12,11 @@ variable "DATABRICKS_TOKEN" {
 variable "DATABRICKS_REPO_HOME" {
   description = "Parent folder were repo will be added"
   type        = string
-  default = "/Repos"
+  default     = "/Repos"
 }
 
 variable "SINGLE_NODE_CLUST_POLICY_ID" {
   description = "Parent folder were repo will be added"
   type        = string
-  default = ""
+  default     = ""
 }
